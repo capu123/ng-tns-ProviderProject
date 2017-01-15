@@ -1,21 +1,32 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import {Database} from "./providers/database/database";
 
 @Component({
     selector: "my-app",
     templateUrl: "app.component.html",
 })
-export class AppComponent {
-    public counter: number = 16;
+export class AppComponent implements OnInit{
+    public people: Array<any>;
 
-    public get message(): string {
-        if (this.counter > 0) {
-            return this.counter + " taps left";
-        } else {
-            return "Hoorraaay! \nYou are ready to start building!";
-        }
+    public constructor(private database: Database){
+        this.people = [];
     }
-    
-    public onTap() {
-        this.counter--;
+
+    ngOnInit(){   //loading data
+        setTimeout(()=> {
+            this.fetch();
+        }, 500);
+    }
+
+    public insert() {
+    this.database.insert({firstname: "Saideep", lastname: "Chhetri"}).then(result => {
+        this.fetch();
+      });
+    }
+ 
+    public fetch() {
+        this.database.fetch().then(result => {
+            this.people = result;
+        });
     }
 }
